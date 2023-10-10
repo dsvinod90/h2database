@@ -242,6 +242,8 @@ public final class H2Type implements SQLType {
      */
     public static final H2Type UUID = new H2Type(TypeInfo.TYPE_UUID, "UUID");
 
+    public static final H2Type IPV4 = new H2Type(TypeInfo.TYPE_IPV4, "IPV4");
+
     // Collections
 
     // Use arrayOf() for ARRAY

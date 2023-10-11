@@ -123,6 +123,7 @@ public final class ValueDataType extends BasicDataType<Value> implements Statefu
     private static final int BINARY = 137;
     private static final int DECFLOAT = 138;
     private static final int IPV4 = 42;
+    private static final int IPV6 = 140;
 
     final DataHandler handler;
     final CastDataProvider provider;
@@ -418,6 +419,11 @@ public final class ValueDataType extends BasicDataType<Value> implements Statefu
             case Value.IPV4: {
                 String s = v.getString();
                 writeString(buff.put((byte)IPV4), s);
+                break;
+            }
+            case Value.IPV6: {
+                String s = v.getString();
+                writeString(buff.put((byte)IPV6), s);
                 break;
             }
             case Value.VARCHAR_IGNORECASE:

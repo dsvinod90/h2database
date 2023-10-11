@@ -129,6 +129,7 @@ public class DataType {
                 "CHARACTER LARGE OBJECT", "CLOB", "CHAR LARGE OBJECT",
                 "NCLOB", "NCHAR LARGE OBJECT", "NATIONAL CHARACTER LARGE OBJECT");
         add(Value.IPV4, Types.VARCHAR, createString(false, false), "IPV4");
+        add(Value.IPV6, Types.VARCHAR, createString(false, false), "IPV6");
         add(Value.VARCHAR_IGNORECASE, Types.VARCHAR, createString(false, false), "VARCHAR_IGNORECASE");
         add(Value.BINARY, Types.BINARY, createBinary(true), "BINARY");
         add(Value.VARBINARY, Types.VARBINARY, createBinary(false),

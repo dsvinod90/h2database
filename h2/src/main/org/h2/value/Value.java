@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.h2.Ipv4;
+import org.h2.Ipv6;
 import org.h2.api.ErrorCode;
 import org.h2.api.IntervalQualifier;
 import org.h2.engine.CastDataProvider;
@@ -269,10 +270,13 @@ public abstract class Value extends VersionedValue<Value> implements HasSQL, Typ
 
     public static final int IPV4 = ROW + 1;
 
+
+    public static final int IPV6 = IPV4 + 1;
+
     /**
      * The number of value types.
      */
-    public static final int TYPE_COUNT = IPV4 + 1;
+    public static final int TYPE_COUNT = IPV6 + 1;
 
     /**
      * Group for untyped NULL data type.
@@ -328,7 +332,7 @@ public abstract class Value extends VersionedValue<Value> implements HasSQL, Typ
     static final byte GROUPS[] = {
             // NULL
             GROUP_NULL,
-            // CHAR, VARCHAR, CLOB, VARCHAR_IGNORECASE, IPV4
+            // CHAR, VARCHAR, CLOB, VARCHAR_IGNORECASE, IPV4, IPV6
             GROUP_CHARACTER_STRING, GROUP_CHARACTER_STRING, GROUP_CHARACTER_STRING, GROUP_CHARACTER_STRING,
             // BINARY, VARBINARY, BLOB
             GROUP_BINARY_STRING, GROUP_BINARY_STRING, GROUP_BINARY_STRING,
@@ -352,7 +356,7 @@ public abstract class Value extends VersionedValue<Value> implements HasSQL, Typ
             GROUP_INTERVAL_DT,
             // JAVA_OBJECT, ENUM, GEOMETRY, JSON, UUID
             GROUP_OTHER, GROUP_OTHER, GROUP_OTHER, GROUP_OTHER, GROUP_OTHER,
-            // ARRAY, ROW, IPV4
+            // ARRAY, ROW, IPV4, IPV6
             GROUP_COLLECTION, GROUP_COLLECTION, GROUP_CHARACTER_STRING
             //
     };
@@ -372,7 +376,7 @@ public abstract class Value extends VersionedValue<Value> implements HasSQL, Typ
             "INTERVAL DAY TO HOUR", "INTERVAL DAY TO MINUTE", "INTERVAL DAY TO SECOND", //
             "INTERVAL HOUR TO MINUTE", "INTERVAL HOUR TO SECOND", "INTERVAL MINUTE TO SECOND", //
             "JAVA_OBJECT", "ENUM", "GEOMETRY", "JSON", "UUID", //
-            "ARRAY", "ROW", "IPV4", //
+            "ARRAY", "ROW", "IPV4", "IPV6"//
     };
 
     /**
@@ -1215,6 +1219,13 @@ public abstract class Value extends VersionedValue<Value> implements HasSQL, Typ
                     return ipv4Value;
                 } catch (Exception e) {
                     throw DbException.get(ErrorCode.IPV4_ERROR_CODE, getString());
+                }
+            case IPV6:
+                try{
+                    Value ipv6Value = ValueIpv6.get(new Ipv6(getString()));
+                    return ipv6Value;
+                } catch (Exception e) {
+                    throw DbException.get(ErrorCode.IPV6_ERROR_CODE, getString());
                 }
             default:
                 throw getDataConversionError(targetValueType);

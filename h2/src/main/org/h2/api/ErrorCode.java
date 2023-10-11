@@ -2251,9 +2251,11 @@ public class ErrorCode {
      */
     public static final int GROUP_BY_NOT_IN_THE_RESULT = 90157;
 
-    public static final int IPV4_ERROR_CODE = GROUP_BY_NOT_IN_THE_RESULT + 1;
+    public static final int IPV4_ERROR_CODE = 90158;
 
-    // next is 90158
+    public static final int IPV6_ERROR_CODE = 90159;
+
+    // next is 90160
 
     private ErrorCode() {
         // utility class

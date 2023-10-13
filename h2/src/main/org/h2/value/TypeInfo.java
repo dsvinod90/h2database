@@ -211,6 +211,8 @@ public class TypeInfo extends ExtTypeInfo implements Typed {
 
     public static final TypeInfo TYPE_IPV4;
 
+    public static final TypeInfo TYPE_IPV6;
+
     private final int valueType;
 
     private final long precision;
@@ -261,6 +263,7 @@ public class TypeInfo extends ExtTypeInfo implements Typed {
                     null);
         }
         infos[Value.IPV4] = TYPE_IPV4 = new TypeInfo(Value.IPV4);
+        infos[Value.IPV6] = TYPE_IPV6 = new TypeInfo(Value.IPV6);
         TYPE_INTERVAL_DAY = infos[Value.INTERVAL_DAY];
         TYPE_INTERVAL_YEAR_TO_MONTH = infos[Value.INTERVAL_YEAR_TO_MONTH];
         TYPE_INTERVAL_DAY_TO_SECOND = infos[Value.INTERVAL_DAY_TO_SECOND];
@@ -350,6 +353,14 @@ public class TypeInfo extends ExtTypeInfo implements Typed {
                     precision = 1;
                 }
                 return new TypeInfo(Value.IPV4, precision);
+           case Value.IPV6:
+                if (precision < 1 || precision >= Constants.MAX_STRING_LENGTH) {
+                    if (precision != 0) {
+                        return TYPE_IPV6;
+                    }
+                    precision = 1;
+                }
+                return new TypeInfo(Value.IPV6, precision);
             case Value.CLOB:
                 if (precision < 1) {
                     return TYPE_CLOB;
@@ -850,6 +861,7 @@ public class TypeInfo extends ExtTypeInfo implements Typed {
                     case Value.GROUP_INTERVAL_YM:
                     case Value.GROUP_INTERVAL_DT:
                     case Value.IPV4:
+                    case Value.IPV6:
                         return true;
                     case Value.GROUP_OTHER:
                         switch (vt2) {
@@ -1398,6 +1410,12 @@ public class TypeInfo extends ExtTypeInfo implements Typed {
                 break;
             case Value.IPV4:
                 builder.append("IPV4");
+                if (extTypeInfo != null) {
+                    extTypeInfo.getSQL(builder, sqlFlags);
+                }
+                break;
+            case Value.IPV6:
+                builder.append("IPV6");
                 if (extTypeInfo != null) {
                     extTypeInfo.getSQL(builder, sqlFlags);
                 }

@@ -244,6 +244,8 @@ public final class H2Type implements SQLType {
 
     public static final H2Type IPV4 = new H2Type(TypeInfo.TYPE_IPV4, "IPV4");
 
+    public static final H2Type IPV6 = new H2Type(TypeInfo.TYPE_IPV6, "IPV6");
+
     // Collections
 
     // Use arrayOf() for ARRAY

@@ -27,9 +27,9 @@ final class AggregateDataGeoMean extends AggregateData {
 
     private final TypeInfo dataType;
     private long count;
-    private double doubleValue;
-    private BigDecimal decimalValue;
-    private BigInteger integerValue;
+    private double doubleValue = 1;
+    private BigDecimal decimalValue = BigDecimal.valueOf(1);
+    private BigInteger integerValue = BigInteger.valueOf(1);
 
     /**
      * @param dataType
@@ -41,13 +41,16 @@ final class AggregateDataGeoMean extends AggregateData {
 
     @Override
     void add(SessionLocal session, Value v) {
+        System.out.println(v + "ADD GEOMEAN!!!!!");
         if (v == ValueNull.INSTANCE) {
             return;
         }
         count++;
+//        System.out.println(dataType.getValueType());
         switch (dataType.getValueType()) {
             case Value.DOUBLE:
                 doubleValue *= v.getDouble();
+                System.out.println(doubleValue);
                 break;
             case Value.NUMERIC:
             case Value.DECFLOAT: {
@@ -64,6 +67,7 @@ final class AggregateDataGeoMean extends AggregateData {
 
     @Override
     Value getValue(SessionLocal session) {
+        System.out.println("GEOMEAN!!!!!");
         if (count == 0) {
             return ValueNull.INSTANCE;
         }
@@ -71,18 +75,17 @@ final class AggregateDataGeoMean extends AggregateData {
         int valueType = dataType.getValueType();
         switch (valueType) {
             case Value.DOUBLE:
-                v = ValueDouble.get(doubleValue / count);
+                double rootValue = Math.pow(doubleValue, 1.0/count);
+                v = ValueDouble.get(rootValue);
                 break;
             case Value.NUMERIC:
-                v = ValueNumeric
-                        .get(decimalValue.divide(BigDecimal.valueOf(count), dataType.getScale(), RoundingMode.HALF_DOWN));
-                break;
             case Value.DECFLOAT:
-                v = ValueDecfloat.divide(decimalValue, BigDecimal.valueOf(count), dataType);
+                BigDecimal rootNumericValue = BigDecimal.valueOf(Math.pow(decimalValue.doubleValue(), 1.0/count));
+                v = ValueNumeric.get(rootNumericValue);
                 break;
             default:
                 v = IntervalUtils.intervalFromAbsolute(IntervalQualifier.valueOf(valueType - Value.INTERVAL_YEAR),
-                        integerValue.divide(BigInteger.valueOf(count)));
+                        BigInteger.valueOf((long) Math.pow(integerValue.doubleValue(), 1.0/count)));
         }
         return v.castTo(dataType, session);
     }

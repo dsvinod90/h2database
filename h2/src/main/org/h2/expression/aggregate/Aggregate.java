@@ -447,8 +447,9 @@ public class Aggregate extends AbstractAggregate implements ExpressionWithFlags 
         case ANY:
         case EVERY:
             return new AggregateDataDefault(aggregateType, type);
-        case AVG:
         case GEOMEAN:
+            return new AggregateDataGeoMean(type);
+        case AVG:
             if (distinct) {
                 break;
             }

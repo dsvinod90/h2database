@@ -41,6 +41,7 @@ final class AggregateDataAvg extends AggregateData {
 
     @Override
     void add(SessionLocal session, Value v) {
+        System.out.println("ADD AVG!!!!!");
         if (v == ValueNull.INSTANCE) {
             return;
         }
@@ -64,6 +65,7 @@ final class AggregateDataAvg extends AggregateData {
 
     @Override
     Value getValue(SessionLocal session) {
+        System.out.println("AVG!!!!!");
         if (count == 0) {
             return ValueNull.INSTANCE;
         }

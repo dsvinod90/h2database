@@ -115,6 +115,7 @@ public class Aggregate extends AbstractAggregate implements ExpressionWithFlags 
         addAggregate("MIN", AggregateType.MIN);
         addAggregate("MAX", AggregateType.MAX);
         addAggregate("AVG", AggregateType.AVG);
+        addAggregate("GEOMEAN", AggregateType.GEOMEAN);
         addAggregate("LISTAGG", AggregateType.LISTAGG);
         // MySQL compatibility: group_concat(expression, delimiter)
         addAggregate("GROUP_CONCAT", AggregateType.LISTAGG);
@@ -447,6 +448,7 @@ public class Aggregate extends AbstractAggregate implements ExpressionWithFlags 
         case EVERY:
             return new AggregateDataDefault(aggregateType, type);
         case AVG:
+        case GEOMEAN:
             if (distinct) {
                 break;
             }
@@ -584,6 +586,15 @@ public class Aggregate extends AbstractAggregate implements ExpressionWithFlags 
                     return ValueNull.INSTANCE;
                 }
                 return collect(session, c, new AggregateDataAvg(type));
+            }
+            break;
+        case GEOMEAN:
+            if (distinct) {
+                AggregateDataCollecting c = ((AggregateDataCollecting) data);
+                if (c.getCount() == 0) {
+                    return ValueNull.INSTANCE;
+                }
+                return collect(session, c, new AggregateDataGeoMean(type));
             }
             break;
         case STDDEV_POP:
@@ -1010,6 +1021,7 @@ public class Aggregate extends AbstractAggregate implements ExpressionWithFlags 
             }
             break;
         case AVG:
+        case GEOMEAN:
             if ((type = getAvgType(type)) == null) {
                 throw DbException.get(ErrorCode.SUM_OR_AVG_ON_WRONG_DATATYPE_1, getTraceSQL());
             }
